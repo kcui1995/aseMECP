@@ -165,7 +165,7 @@ class MECPPenalty(Calculator):
                 # J = E_P + coeff * smooth_abs(E_R - E_P - dE)
                 # Note that in principle we should define J as J = (E_P + dE) + coeff * smooth_abs(E_R - E_P - dE)
                 # The dE term in the first parenthesis is omitted because it's a constant and does not affect the gradient, 
-                # and the actural value of J is not physically meaningful
+                # and the actual value of J is not physically meaningful
                 objective = product_energy + self.penalty_coeff * smooth_abs(reactant_energy - product_energy - self.target_dE, a=self.smoothness)
                 objective_forces_reac_proton = reactant_forces[[self.proton_index]]
                 objective_forces_prod_proton = product_forces[[self.proton_index]]
@@ -175,7 +175,7 @@ class MECPPenalty(Calculator):
                 # J = 0.5*(E_R + E_P) + coeff * smooth_abs(E_R - E_P - dE)
                 # Note that in principle we should define J as J = 0.5*(E_R + E_P + dE) + coeff * smooth_abs(E_R - E_P - dE)
                 # The dE term in the first parenthesis is omitted because it's a constant and does not affect the gradient, 
-                # and the actural value of J is not physically meaningful
+                # and the actual value of J is not physically meaningful
                 objective = 0.5*(reactant_energy + product_energy) + self.penalty_coeff * smooth_abs(reactant_energy - product_energy - self.target_dE, a=self.smoothness)
                 objective_forces_reac_proton = reactant_forces[[self.proton_index]]
                 objective_forces_prod_proton = product_forces[[self.proton_index]]
@@ -193,7 +193,7 @@ class MECPPenalty(Calculator):
                 # J = E_P + coeff * (E_R - E_P - dE)^2
                 # Note that in principle we should define J as J = (E_P + dE) + coeff * (E_R - E_P - dE)^2
                 # The dE term in the first parenthesis is omitted because it's a constant and does not affect the gradient, 
-                # and the actural value of J is not physically meaningful
+                # and the actual value of J is not physically meaningful
                 objective = product_energy + self.penalty_coeff * (reactant_energy - product_energy - self.target_dE)**2
                 objective_forces_reac_proton = reactant_forces[[self.proton_index]]
                 objective_forces_prod_proton = product_forces[[self.proton_index]]
@@ -203,7 +203,7 @@ class MECPPenalty(Calculator):
                 # J = 0.5*(E_R + E_P) + coeff * (E_R - E_P - dE)^2
                 # Note that in principle we should define J as J = 0.5*(E_R + E_P + dE) + coeff * (E_R - E_P - dE)^2
                 # The dE term in the first parenthesis is omitted because it's a constant and does not affect the gradient, 
-                # and the actural value of J is not physically meaningful
+                # and the actual value of J is not physically meaningful
                 objective = 0.5*(reactant_energy + product_energy) + self.penalty_coeff * (reactant_energy - product_energy - self.target_dE)**2
                 objective_forces_reac_proton = reactant_forces[[self.proton_index]]
                 objective_forces_prod_proton = product_forces[[self.proton_index]]
