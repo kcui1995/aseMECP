@@ -2,8 +2,10 @@ import numpy as np
 from ase import Atoms
 from ase.calculators.calculator import Calculator, all_changes
 from scipy.special import erf
-from scipy.integrate import simps
-
+try:
+    from scipy.integrate import simps
+except ImportError:
+    from scipy.integrate import simpson as simps
 
 # Procedure for MECP optimization for PCET/PCEnT systems
 # We want to find the MECP between the reactant and product diabatic states. 
