@@ -1,5 +1,5 @@
 # ase-MECP
-This code is used for minimum energy crossing point (MECP) optimization specifically for PCET and PCEnT systems. It interfaces with the [atomic simulation environment (ASE)](https://ase-lib.org/about.html) to drive first-principles calculations and update the coordinates. 
+This code is used for minimum energy crossing point (MECP) optimization specifically for PCET and PCEnT systems. It interfaces with the atomic simulation environment (ASE) to drive first-principles calculations and update the coordinates. 
 
 ## Installation 
 To use this module, simply download the code and add the parent folder to your `$PYTHONPATH` variable.
@@ -44,9 +44,10 @@ We set the "energy" of the auxiliary Atoms object as the objective function $`J`
 
 
 ## Documentation
+We assume that the users are familiar with ASE, its documentation can be found [here](https://ase-lib.org/about.html).
 
 ### I. Initialization
-
+ 
 To perform an MECP optimization, we first set up an `MECPPenalty` object. The required parameters are:
 
 1. `reactant`: an `Atoms` object for the reactant system (transferring proton on the donor).
