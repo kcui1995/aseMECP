@@ -61,20 +61,96 @@ To perform an MECP optimization, we first set up an `MECPPenalty` object. The re
 5. `product_calculator`: an ASE `calculator` object for the product system.
 6. `penalty_coeff`: (float) coefficient for the penalty function, default = 1.
 7. `target_dE`: (float) targeted energy difference between the reactant and the product at the optimized geometry $`\Delta`$, default = 0.
+
+#### Choosing the objective function
+The following parameters are used to define the objective function:
+
 8. `opt_state`: (string) choose among 'reactant', 'product', and 'average', indicating the energy of which state that the penalty function is added on.
 9. `penalty_function`: (string) choose between 'smooth_abs' and 'squared', indicating which type of penalty function is used.
 
+We have implemented six different objective functions, they all have the form
+```math
+J = {\rm system\ energy} + c\times{\rm penalty\ function}
+```
+Since at the crossing point the energies $`E_{\rm R}`$ and $`E_{\rm P}+\Delta`$ should be equal, we can choose to optimize either one or their average. When set `opt_state = reactant`, we set $`{\rm system\ energy}=E_{\rm R}`$ in $`J`$; when set `opt_state = product`, we set $`{\rm system\ energy}=E_{\rm P}`$ in $`J`$; When set `opt_state = average`, we set $`{\rm system\ energy}=(E_{\rm R}+E_{\rm P})/2`$ in $`J`$. The $`\Delta`$ term is omitted because it's a constant and does not affect the gradient, and the actual value of $`J`$ is not physically meaningful. 
 
-
-Optinonal parameters:
+The penalty function must be non-negative and reaches zero when the constraint is met. We have implemented two choices. When set `penalty_function = squared`, we set $`{\rm penalty\ function} = ( E_{{\rm R}} - E_{{\rm P}} -\Delta )^2`$ in $`J`$; when set `penalty_function = smooth_abs`, we set $`{\rm penalty\ function} = {\rm smooth\_abs}( E_{{\rm R}} - E_{{\rm P}} -\Delta )`$, where
+```math
+{\rm smooth\_abs}(x;a) = \int_{0}^{x} {\rm erf}(ax){\rm d}x
+```
+This is an approximation to the absolute value of $`x`$, but the curve is smoothed near the origin. $`a`$ is the parameter that controlls the smoothness near the origin. When $`a\rightarrow \infty`$, $`{\rm smooth\_abs}(x;\infty)=|x|`$. The parameter `smoothness` sets the value of $`a`$.
 
 10. `smoothness`: (float) control the smoothness of the 'smooth_abs' function when used as the penalty function, smaller value means a smoother function, defult = 1.
+
+> [!TIP]
+> In most cases, the default choice of the objective function (`opt_state = average`, `penalty_function = squared`) works well. However, when the system is far from the crossing point, the large force arising from the quadratic penalty function can cause the optimization to explode. Setting `penalty_function = smooth_abs` may solve this issue. 
+
+#### Constrain proton donor-acceptor distance
+One can also constrain the distance between the donor and acceptor distance by setting the following parameters:
+
 11. `constrain_proton_DA_distance`: (Bool) whether to apply constrain on the proton donor-acceptor distance, default = False. 
-
-When `constrain_proton_DA_distance` is set to `True`, two other parameters are required:
-
 12. `donor_index`: (int) index of the proton donor (starting with 0). 
 13. `acceptor_index`: (int) index of the proton donor (starting with 0). 
 
+#### Example
 
-    
+The following code is an example of setting up the `MECPPenalty` calculator. The quantum chemistry calculation will be performed using Q-Chem at TDDFT/6-31+G** level. 
+```python
+import numpy as np
+from ase.io import read, write
+from MECP_w_constraints import MECPPenalty
+from ase.calculators.qchem import QChem
+
+# read structures of the reactant and the product from xyz files
+reac = read('LES_LEPT_geom_move_H.xyz')
+prod = read('LEPT_pl_DA_along_Z_aligned.xyz')
+
+# The following lines set up Q-Chem calculaters for the reactant and the product
+reac_calc = QChem(label='calc/LES',
+                  method='CIS',
+                  exchange='CAM-B3LYP',
+                  basis='6-31+G**',
+                  CIS_N_Roots=5,
+                  CIS_triplets='False',
+                  CIS_STATE_DERIV=1,
+                  RPA='False',
+                  nt=16,
+                  save=False)
+
+prod_calc = QChem(label='calc/LEPT',
+                  method='CIS',
+                  exchange='CAM-B3LYP',
+                  basis='6-31+G**',
+                  CIS_N_Roots=5,
+                  CIS_triplets='False',
+                  CIS_STATE_DERIV=2,
+                  RPA='False',
+                  nt=16,
+                  save=False)
+
+# The following lines set up the MECPPenalty calculator, using the default objective function and with constraints applied to the
+# proton donor-acceptor distance. The calculation results will be logged to the file 'state_energies.log' 
+calc = MECPPenalty(reactant=reac,
+                    product=prod,
+                    proton_index=1,
+                    reactant_calculator=reac_calc,
+                    product_calculator=prod_calc,
+                    state_energies_logfile='state_energies.log',
+                    opt_state='average',
+                    penalty_function='squared',
+                    penalty_coeff=25,
+                    constrain_proton_DA_distance=True,
+                    donor_index=0,
+                    acceptor_index=2)
+```
+
+### II. Optimization
+With the `MECPPenalty` calculator set up, one can perform the MECP optimization using ASE's optimization module as usual. The following example uses the LBFGS optimizer, and set the convergence criteria to all forces less than 0.03 eV/angstrom.
+```python
+from ase.optimize import LBFGS
+
+aux_sys = calc.aux_system
+aux_sys.calc = calc
+opt = LBFGS(aux_sys, logfile='opt.log', trajectory='aux_opt.traj', damping=0.1)
+opt.run(fmax=0.03)
+```
