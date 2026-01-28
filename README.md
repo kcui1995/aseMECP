@@ -44,7 +44,7 @@ We set the "energy" of the auxiliary Atoms object as the objective function $`J`
 
 
 ## Documentation
-We assume that the users are familiar with ASE, its documentation can be found [here](https://ase-lib.org/about.html).
+We assume that the users are familiar with ASE. Its documentation can be found [here](https://ase-lib.org/about.html).
 
 ### I. Initialization
  
