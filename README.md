@@ -145,7 +145,7 @@ calc = MECPPenalty(reactant=reac,
                     acceptor_index=2)
 ```
 
-### II. Optimization
+### II. MECP Optimization
 With the `MECPPenalty` calculator set up, one can perform the MECP optimization using ASE's optimization module as usual. The following example uses the LBFGS optimizer, and set the convergence criteria as when all forces less than 0.03 eV/angstrom.
 ```python
 from ase.optimize import LBFGS
