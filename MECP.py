@@ -57,7 +57,7 @@ class MECPPenalty(Calculator):
     smoothness: (float) control the smoothness of the 'smooth_abs' function when used as the penalty function, smaller value means a smoother function, defult = 1.
     constrain_proton_DA_distance: (Bool) whether to apply constrain on the proton donor-acceptor distance, default = False. 
     donor_index: (int) index of the proton donor (starting with 0). 
-    acceptor_index: (int) index of the proton donor (starting with 0). 
+    acceptor_index: (int) index of the proton acceptor (starting with 0). 
 
     Note that the atomic coodinate of the nuclei other than the transferring proton must be the same 
     in reactant and product. The order of all atoms (including the proton) also must be the same. 
