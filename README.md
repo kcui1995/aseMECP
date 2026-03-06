@@ -35,10 +35,7 @@ Here $`r_{\rm p1}`$, $`r_{\rm p2}`$, and $`q`$ are independent variables. Five o
     \left.\min_{r_{\rm p1}}E_{\rm R}(r_{\rm p1}, q)\right|_{\text{fix }q},\quad \left.\min_{r_{\rm p2}}E_{\rm P}(r_{\rm p2}, q)\right|_{\text{fix }q}, \quad
     \left.\min_{q}\mathcal{J}(r_{\rm p1}, r_{\rm p2}, q)\right|_{\text{fix }r_{\rm p1},r_{\rm p2}}
 ```
-We update the coordinates $`\{r_{\rm p1}, r_{\rm p2}, q\}`$ according to the gradient 
-```math
-\left\{\frac{\partial E_{\rm R}}{\partial r_{\rm p1}}, \frac{\partial E_{\rm P}}{\partial r_{\rm p2}}, \frac{\partial J}{\partial q}\right\}
-```
+We perform the three optimizations to obtain the updated coordinates $`\{r_{\rm p1}, r_{\rm p2}, q\}`$ and the updated $`E_{\rm I}`$, $`E_{\rm II}`$, and $`J`$. 
 To take advantage of ASE's optimization module, we create an auxiliary `Atoms` object with $`N+1`$ atoms, where $`N`$ is the total number of atoms in the molecule, the extra atom coresponds to a replica of the transfering proton. Thus both $`r_{\rm p1}`$ and $`r_{\rm p2}`$ are stored as the atomic coordinates in the auxiliary `Atoms` object. 
 We set the "energy" of the auxiliary Atoms object as the objective function $`J`$ and the "forces" as $`\left\{\frac{\partial E_{\rm R}}{\partial r_{\rm p1}}, \frac{\partial E_{\rm P}}{\partial r_{\rm p2}}, \frac{\partial J}{\partial q}\right\}`$. These quantities will be calculated using the `MECPPenalty` calculator. Currently it is only implemented for single proton transfer.
 
