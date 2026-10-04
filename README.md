@@ -5,7 +5,7 @@ This code is used for minimum energy crossing point (MECP) optimization specific
 To use this module, simply download the code and add the parent folder to your `$PYTHONPATH` variable.
 For example
 ```bash
-export PYTHONPATH="[YOUR_INSTALLATION_PATH]/aseMECP-main":$PYTHONPATH
+export PYTHONPATH="[YOUR_INSTALLATION_PATH]/aseMECP":$PYTHONPATH
 ```
 You must have the [atomic simulation environment (ASE)](https://ase-lib.org/about.html) installed to use this module. 
 
