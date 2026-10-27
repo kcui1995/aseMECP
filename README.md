@@ -176,7 +176,7 @@ calc = MECPPenalty(reactant=reac,
 The optimization procedure is the same for single and multiple proton transfer cases. 
 
 > [!NOTE]
-> Currently, the functionality of constraining proton donor-acceptor distance during the MECP optimization can only constrain one pair of proton donor and acceptor, even for the multiple proton transfer case. This will be fixed in future updates. 
+> Currently, the functionality for constraining proton donor-acceptor distance during the MECP optimization can only constrain one pair of proton donor and acceptor, even for the multiple proton transfer case. This will be fixed in future updates. 
 
 ## Citation
 If you used this code for your research, please cite the following paper: 
