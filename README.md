@@ -36,8 +36,8 @@ Here $`r_{\rm p1}`$, $`r_{\rm p2}`$, and $`q`$ are independent variables. Five o
     \left.\min_{q}\mathcal{J}(r_{\rm p1}, r_{\rm p2}, q)\right|_{\text{fix }r_{\rm p1},r_{\rm p2}}
 ```
 We perform the three optimizations to obtain the updated coordinates $`\{r_{\rm p1}, r_{\rm p2}, q\}`$ and the updated $`E_{\rm I}`$, $`E_{\rm II}`$, and $`J`$. 
-To take advantage of ASE's optimization module, we create an auxiliary `Atoms` object with $`N+1`$ atoms, where $`N`$ is the total number of atoms in the molecule, the extra atom coresponds to a replica of the transfering proton. Thus both $`r_{\rm p1}`$ and $`r_{\rm p2}`$ are stored as the atomic coordinates in the auxiliary `Atoms` object. 
-We set the "energy" of the auxiliary Atoms object as the objective function $`J`$ and the "forces" as $`\left\{\frac{\partial E_{\rm R}}{\partial r_{\rm p1}}, \frac{\partial E_{\rm P}}{\partial r_{\rm p2}}, \frac{\partial J}{\partial q}\right\}`$. These quantities will be calculated using the `MECPPenalty` calculator. Currently it is only implemented for single proton transfer.
+To take advantage of ASE's optimization module, we create an auxiliary `Atoms` object with $`N+N_{\rm p}`$ atoms, where $`N`$ is the total number of atoms in the molecule and $`N_{\rm p}`$ is the number of transferring protons. The extra atoms corespond to replicas of the transfering protons. Thus both $`r_{\rm p1}`$ and $`r_{\rm p2}`$ are stored as the atomic coordinates in the auxiliary `Atoms` object. 
+We set the "energy" of the auxiliary Atoms object as the objective function $`J`$ and the "forces" as $`\left\{\frac{\partial E_{\rm R}}{\partial r_{\rm p1}}, \frac{\partial E_{\rm P}}{\partial r_{\rm p2}}, \frac{\partial J}{\partial q}\right\}`$. These quantities will be calculated using the `MECPPenalty` calculator. The initial implementation in Ref.1 only focuses on single proton transfer, but a generalization to multiple proton transfer case is also available.
 
 
 ## Documentation
@@ -95,7 +95,7 @@ The following code is an example of setting up an `MECPPenalty` calculator. The 
 ```python
 import numpy as np
 from ase.io import read, write
-from aseMECP import MECPPenalty
+from aseMECP.MECP import MECPPenalty
 from aseMECP.qchem import QChem
 #from ase.calculators.qchem import QChem
 
@@ -152,3 +152,29 @@ aux_sys.calc = calc
 opt = LBFGS(aux_sys, logfile='opt.log', trajectory='aux_opt.traj', damping=0.1)
 opt.run(fmax=0.03)
 ```
+
+### III. Multiple Proton Transfer
+The initial implementation in Ref.1 only focuses on single proton transfer, but a generalization to multiple proton transfer case is also available. For this case, we import the `MECPPenalty` calculator from `aseMECP.MECP_multiH` instead. Most input quantities are the same as the single proton transfer case, except for `aseMECP.MECP_multiH.MECPPenalty` takes a list of the indices of the transferring protons, `proton_indices`, as its input instead of a single proton index. 
+```python
+#from aseMECP.MECP import MECPPenalty            # single proton transfer case
+from aseMECP.MECP_multiH import MECPPenalty      # multiple proton transfer case
+
+calc = MECPPenalty(reactant=reac,
+                    product=prod,
+                    #proton_index=1,            # single proton transfer case
+                    proton_indices=[1,5],       # multiple proton transfer case
+                    reactant_calculator=reac_calc,
+                    product_calculator=prod_calc,
+                    state_energies_logfile='state_energies.log',
+                    opt_state='average',
+                    penalty_function='squared',
+                    penalty_coeff=25,
+                    constrain_proton_DA_distance=True,
+                    donor_index=0,
+                    acceptor_index=2)
+```
+The optimization procedure is the same for single and multiple proton transfer cases. 
+
+## Citation
+If you used this code for your research, please cite the following paper: 
+1. Cui, K.; Hammes-Schiffer, S.; General Expression for Vibronic Coupling in Proton-Coupled Energy Transfer. *J. Chem. Theory Comput.* **2026**, *22*, 5674–5685  
