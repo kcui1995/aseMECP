@@ -161,8 +161,8 @@ from aseMECP.MECP_multiH import MECPPenalty      # multiple proton transfer case
 
 calc = MECPPenalty(reactant=reac,
                     product=prod,
-                    #proton_index=1,            # single proton transfer case
-                    proton_indices=[1,5],       # multiple proton transfer case
+                    #proton_index=1,             # single proton transfer case
+                    proton_indices=[1,5],        # multiple proton transfer case
                     reactant_calculator=reac_calc,
                     product_calculator=prod_calc,
                     state_energies_logfile='state_energies.log',
