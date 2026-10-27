@@ -180,4 +180,4 @@ The optimization procedure is the same for single and multiple proton transfer c
 
 ## Citation
 If you used this code for your research, please cite the following paper: 
-1. Cui, K.; Hammes-Schiffer, S.; General Expression for Vibronic Coupling in Proton-Coupled Energy Transfer. *J. Chem. Theory Comput.* **2026**, *22*, 5674–5685  
+1. Cui, K.; Hammes-Schiffer, S.; General Expression for Vibronic Coupling in Proton-Coupled Energy Transfer. *J. Chem. Theory Comput.* **2026**, *22*, 5674–5685 [DOI:10.1021/acs.jctc.6c00443](https://doi.org/10.1021/acs.jctc.6c00443) 
