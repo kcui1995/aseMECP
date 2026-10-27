@@ -8,9 +8,9 @@ try:
 except ImportError:
     from scipy.integrate import simpson as simps
 
-# Procedure for MECP optimization for PCET/PCEnT systems
+# Procedure for MECP optimization for PCET/PCEnT systems with multiple transferring protons
 # We want to find the MECP between the reactant and product diabatic states. 
-# The transfering proton is located on the donor for the reactant state and on 
+# The transfering protons are located on the donor for the reactant state and on 
 # the acceptor for the product state. The coordinate of other nuclei will be 
 # the same for the reactant and the product, i.e., the MECP geometry. 
 
@@ -21,12 +21,12 @@ except ImportError:
 # or
 # J2 = (E_R + E_P + dE)/2 + coeff * (E_R - E_P - dE)^2
 # where coeff is a positive number, J depends on the following parameters: 
-# the coodinate of the proton on reactant state rp_R, the coordinate of the proton on product state rp_P,
+# the coodinate of the protons on reactant state rp_R, the coordinate of the protons on product state rp_P,
 # and the coodinates of other nuclei r_nuc. 
 
 # To take advantage of ASE's optimization module, we create an auxiliary Atoms object, with N+Np atoms
-# where N is the total number of atoms in the molecule, tnd Np is the number of transferring protons 
-# the extra atoms coresponds to a replica of the transfering proton. Thus both rp_R and rp_P are stored 
+# where N is the total number of atoms in the molecule, and Np is the number of transferring protons 
+# the extra atoms coresponds to replicas of the transfering protons. Thus both rp_R and rp_P are stored 
 # as the atomic coordinates in the auxiliary Atoms object. 
 
 # We set the "energy" of the auxiliary Atoms object as the objective function J
@@ -62,8 +62,6 @@ class MECPPenalty(Calculator):
 
     Note that the atomic coodinate of the nuclei other than the transferring proton must be the same 
     in reactant and product. The order of all atoms (including the proton) also must be the same. 
-
-    Currently only implemented for single proton transfer.
     """
 
     implemented_properties = ['energy', 'forces']
