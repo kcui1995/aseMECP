@@ -154,7 +154,7 @@ opt.run(fmax=0.03)
 ```
 
 ### III. Multiple Proton Transfer
-The initial implementation in Ref.1 only focuses on single proton transfer, but a generalization to multiple proton transfer case is also available. For this case, we import the `MECPPenalty` calculator from `aseMECP.MECP_multiH` instead. Most input quantities are the same as the single proton transfer case, except for `aseMECP.MECP_multiH.MECPPenalty` takes a list of the indices of the transferring protons, `proton_indices`, as its input instead of a single proton index. 
+The initial implementation in Ref.1 only focuses on single proton transfer, but a generalization to multiple proton transfer is also available. For this case, we import the `MECPPenalty` calculator from `aseMECP.MECP_multiH` instead. Most input quantities are the same as the single proton transfer case, except that `aseMECP.MECP_multiH.MECPPenalty` takes a list of the indices of the transferring protons, `proton_indices`, as its input instead of a single proton index. 
 ```python
 #from aseMECP.MECP import MECPPenalty            # single proton transfer case
 from aseMECP.MECP_multiH import MECPPenalty      # multiple proton transfer case
